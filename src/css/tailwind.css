@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes animation-init {
+  from {
+    scale: 0;
+  }
+  to {
+    scale: 1;
+  }
+}
+.animation-init {
+  animation-name: animation-init;
+  animation-duration: 200ms;
+}
+
+h1 {
+  @apply text-xl .font-medium;
+}

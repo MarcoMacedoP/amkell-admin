@@ -1,26 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+import { Layout } from "./components/Layout";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Solutions } from "./pages/Solutions";
+type AppProps = {};
 
-function App() {
+export const App: React.FC<AppProps> = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Layout>
+        <Switch>
+          <Route exact path="/">
+            <IndexPage />
+          </Route>
+          <Route exact path="/soluciones">
+            <Solutions />
+          </Route>
+        </Switch>
+      </Layout>
+    </Router>
   );
-}
+};
 
-export default App;
+const IndexPage = () => (
+  <div className=" items-center justify-center">Hello there</div>
+);
