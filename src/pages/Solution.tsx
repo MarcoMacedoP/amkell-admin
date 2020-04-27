@@ -3,8 +3,20 @@ import { useParams } from "react-router-dom";
 import { useGetItemFromCollection } from "../hooks/Firebase";
 import { useState, useEffect } from "react";
 import Editor from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+
 import { Button } from "../components/Button";
+// NOTE: Use the editor from source (not a build)!
+import ClassicEditor from "@ckeditor/ckeditor5-editor-classic/src/classiceditor";
+
+import Essentials from "@ckeditor/ckeditor5-essentials/src/essentials";
+import Bold from "@ckeditor/ckeditor5-basic-styles/src/bold";
+import Italic from "@ckeditor/ckeditor5-basic-styles/src/italic";
+import Paragraph from "@ckeditor/ckeditor5-paragraph/src/paragraph";
+
+const editorConfiguration = {
+  plugins: [Essentials, Bold, Italic, Paragraph],
+  toolbar: ["bold", "italic"],
+};
 
 type SolutionProps = {};
 
@@ -80,6 +92,7 @@ export const Solution: React.FC<SolutionProps> = () => {
         <div className="">
           <Editor
             editor={ClassicEditor}
+            config={editorConfiguration}
             data={values.content}
             onChange={(event: any, editor: any) => setContent(editor.getData())}
           />
