@@ -8,7 +8,6 @@ type PageLabelProps = {
 export const PageLabel: React.FC<PageLabelProps> = ({ to, text }) => {
   const isRouteActive = useRouteMatch({
     path: to,
-    exact: true,
   });
   return (
     <>

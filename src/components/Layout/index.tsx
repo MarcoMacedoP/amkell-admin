@@ -1,5 +1,6 @@
 import * as React from "react";
 import { PageLabel } from "./PageLabel";
+import { Link } from "react-router-dom";
 
 type LayoutProps = {};
 
@@ -9,9 +10,11 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       <section className="w-full flex h-screen">
         <aside className="w-1/3  bg-white block  py-4 shadow-sm lg:w-3/12">
           <header className="h-24 flex items-center px-2">
-            <p className="text-lg text-gray-700 font-medium">Dashboard</p>
+            <Link to="/" className="text-lg text-gray-700 font-medium">
+              Dashboard
+            </Link>
           </header>
-          <PageLabel to="/" text="Paginas" />
+          <PageLabel to="/paginas/" text="Paginas" />
           <PageLabel to="/materiales" text="Materiales" />
           <PageLabel to="/soluciones" text="Soluciones" />
         </aside>
