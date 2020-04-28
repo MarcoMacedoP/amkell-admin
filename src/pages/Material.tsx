@@ -8,6 +8,7 @@ import { Loader } from "../components/Loader";
 import { Editor } from "../components/Editor";
 import { SlugEditor } from "../components/SlugEditor";
 import { Button } from "../components/Button";
+import { ImageUpload } from "../components/ImageUpload";
 
 type MaterialProps = {};
 const initialValues: MaterialInterface & { id: string } = {
@@ -37,6 +38,8 @@ export const Material: React.FC<MaterialProps> = () => {
   }, []);
 
   const setDesc = (desc: string) => setValues({ ...values, desc });
+  const setImages = (images: Array<string>) => setValues({ ...values, images });
+
   const handleSubmit = async () => {
     await collection.updateItem(values.id, values);
     history.goBack();
@@ -45,6 +48,7 @@ export const Material: React.FC<MaterialProps> = () => {
     setValues(status.initialData);
     history.goBack();
   };
+
   return status.isLoading ? (
     <Loader />
   ) : !status.error ? (
@@ -57,6 +61,7 @@ export const Material: React.FC<MaterialProps> = () => {
             name="name"
             onChange={handleChange}
           />
+
           <textarea
             className="mb-4"
             name="caption"
@@ -72,6 +77,12 @@ export const Material: React.FC<MaterialProps> = () => {
               canAddImage={false}
             />
           </div>
+          <ImageUpload
+            images={values.images}
+            onUpload={setImages}
+            onDelete={setImages}
+            alt={values.name}
+          />
           <SlugEditor
             label="Url del material"
             onChange={handleChange}
