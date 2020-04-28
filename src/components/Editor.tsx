@@ -16,7 +16,7 @@ import ImageToolbar from "@ckeditor/ckeditor5-image/src/imagetoolbar";
 import ImageCaption from "@ckeditor/ckeditor5-image/src/imagecaption";
 import ImageStyle from "@ckeditor/ckeditor5-image/src/imagestyle";
 
-const editorConfiguration = {
+const editorConfigurationBase = {
   plugins: [
     Essentials,
     Bold,
@@ -26,11 +26,6 @@ const editorConfiguration = {
     Image,
     EasyImage,
     Heading,
-    ImageCaption,
-    ImageStyle,
-    ImageToolbar,
-    ImageUpload,
-    Base64UploadAdapter,
   ],
   image: {
     toolbar: [
@@ -40,15 +35,35 @@ const editorConfiguration = {
       "imageStyle:side",
     ],
   },
+  toolbar: ["heading", "|", "bold", "italic"],
+};
+
+const editorConfigurationWithImage = {
+  ...editorConfigurationBase,
+  plugins: [
+    ...editorConfigurationBase.plugins,
+    ImageCaption,
+    ImageStyle,
+    ImageToolbar,
+    ImageUpload,
+    Base64UploadAdapter,
+  ],
   toolbar: ["heading", "|", "bold", "italic", "imageUpload"],
 };
 type EditorProps = {
   value: any;
   onChange: (data: any) => void;
+  canAddImage?: boolean;
 };
-export const Editor = ({ onChange, value }: EditorProps) => (
+export const Editor = ({
+  onChange,
+  value,
+  canAddImage = true,
+}: EditorProps) => (
   <Ckeditor
-    config={editorConfiguration}
+    config={
+      canAddImage ? editorConfigurationWithImage : editorConfigurationBase
+    }
     editor={ClassicEditor}
     onChange={(event: any, editor: any) => onChange(editor.getData())}
     data={value}

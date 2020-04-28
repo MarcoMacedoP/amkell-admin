@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useParams } from "react-router-dom";
 import { useGetItemFromCollection } from "../hooks/Firebase";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 import { Button } from "../components/Button";
 import { Editor } from "../components/Editor";

@@ -17,7 +17,7 @@ export const SlugEditor: React.FC<SlugEditorProps> = ({
         {label}
       </label>
       <input
-        className="block border-2 bg-transparent border-gray-300 rounded-md py-1 px-2 mb-4 transition-colors duration-300 focus:border-blue-500 active:border-blue-500"
+        className="input"
         type="text"
         value={value}
         id="slug"

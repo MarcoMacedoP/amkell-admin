@@ -134,3 +134,27 @@ export function useGetItemFromCollection({ collection, query, setData }: useGetI
     return [status, { updateItem, getCollectionData }]
 
 }
+
+
+
+export function useAddItemToCollection<D>(collection: collection, data: D): [() => Promise<any>, { isLoading: boolean, error: any }] {
+    const [status, setStatus] = useState({
+        isLoading: false,
+        error: null,
+    })
+    const addItem = useCallback(async () => {
+        setStatus({ ...status, isLoading: true })
+        try {
+            const result = await db.collection(collection).add(data);
+            setStatus({ ...status, isLoading: false });
+            return result;
+
+
+        } catch (error) {
+            setStatus({ ...status, error })
+        }
+
+    }, [collection, data, status])
+
+    return [addItem, status];
+}
