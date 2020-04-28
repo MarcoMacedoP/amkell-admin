@@ -2,21 +2,11 @@ import * as React from "react";
 import { useParams } from "react-router-dom";
 import { useGetItemFromCollection } from "../hooks/Firebase";
 import { useState, useEffect } from "react";
-import Editor from "@ckeditor/ckeditor5-react";
 
 import { Button } from "../components/Button";
-// NOTE: Use the editor from source (not a build)!
-import ClassicEditor from "@ckeditor/ckeditor5-editor-classic/src/classiceditor";
-
-import Essentials from "@ckeditor/ckeditor5-essentials/src/essentials";
-import Bold from "@ckeditor/ckeditor5-basic-styles/src/bold";
-import Italic from "@ckeditor/ckeditor5-basic-styles/src/italic";
-import Paragraph from "@ckeditor/ckeditor5-paragraph/src/paragraph";
-
-const editorConfiguration = {
-  plugins: [Essentials, Bold, Italic, Paragraph],
-  toolbar: ["bold", "italic"],
-};
+import { Editor } from "../components/Editor";
+import { SlugEditor } from "../components/SlugEditor";
+import { useForm } from "../hooks/Forms";
 
 type SolutionProps = {};
 
@@ -27,38 +17,33 @@ type Solution = {
   content: string;
   caption: string;
 };
-
+const initalValues = {
+  name: "",
+  slug: "",
+  caption: "",
+  content: "",
+  id: "",
+};
 export const Solution: React.FC<SolutionProps> = () => {
   const { slug } = useParams();
-
-  const [solution, isLoading, , { updateItem }] = useGetItemFromCollection(
-    "Soluciones",
-    {
+  const [values, handleChange, setValues] = useForm<Solution>(initalValues);
+  const [
+    { isLoading, initialData, error },
+    { updateItem, getCollectionData },
+  ] = useGetItemFromCollection({
+    collection: "Soluciones",
+    query: {
       key: "slug",
       operator: "==",
       value: slug,
-    }
-  );
-  const [values, setValues] = useState<Solution>({
-    name: "",
-    slug: "",
-    caption: "",
-    content: "",
-    id: "",
+    },
+    setData: setValues,
   });
-
   useEffect(() => {
-    if (!isLoading) {
-      setValues(solution);
-    }
-  }, [solution, isLoading]);
+    getCollectionData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    event.preventDefault();
-    setValues({ ...values, [event.target.name]: event.target.value });
-  };
   const setContent = (content: string) => {
     setValues({
       ...values,
@@ -66,14 +51,15 @@ export const Solution: React.FC<SolutionProps> = () => {
     });
   };
   const handleSubmit = () => {
+    console.log(values);
     updateItem(values.id, values);
   };
 
-  const handleCancel = () => setValues(solution);
+  const handleCancel = () => setValues(initialData);
 
   return isLoading ? (
     <p>Loading...</p>
-  ) : values?.id ? (
+  ) : !error ? (
     <>
       <div className="flex flex-col mb-48">
         <input
@@ -90,31 +76,13 @@ export const Solution: React.FC<SolutionProps> = () => {
         />
 
         <div className="">
-          <Editor
-            editor={ClassicEditor}
-            config={editorConfiguration}
-            data={values.content}
-            onChange={(event: any, editor: any) => setContent(editor.getData())}
-          />
+          <Editor value={values.content} onChange={setContent} />
         </div>
-        <div className=" mt-8 bg-gray-100 p-2">
-          <label htmlFor="slug" className="font-medium p-1 block">
-            Url de la sección
-          </label>
-          <input
-            className="block border-2 bg-transparent border-gray-300 rounded-md py-1 px-2 mb-4 transition-colors duration-300 focus:border-blue-500 active:border-blue-500"
-            type="text"
-            value={values.slug}
-            id="slug"
-            onChange={handleChange}
-            name="slug"
-          />
-          <p className="block  bg-gray-300 text-gray-600 p-2 rounded-md">
-            Este url es usado para mostrarse sobre acceder directamente al
-            contenido. Debe de mantenerse corto para optimizar el
-            posicionamiento en buscadores.
-          </p>
-        </div>
+        <SlugEditor
+          label="Url de la seccion"
+          onChange={handleChange}
+          value={values.slug}
+        />
         <div className="flex w-full h-12">
           <Button
             onClick={handleSubmit}

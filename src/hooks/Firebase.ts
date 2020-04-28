@@ -16,7 +16,7 @@ const firebaseConfig = {
 };
 const app = firebase.initializeApp(firebaseConfig);
 const db = app.firestore();
-type collection = 'Soluciones'
+type collection = 'Soluciones' | 'Materiales';
 
 type query = {
     key: string;
@@ -41,7 +41,6 @@ export function useGetCollection(collection: collection) {
                 setError(null)
                 setIsLoading(false)
             }
-
         }
 
         getCollectionData()
@@ -50,17 +49,33 @@ export function useGetCollection(collection: collection) {
 
 }
 
-
-type useGetItemFromCollectionType = (collection: collection, query: query) => [any, boolean, any, { updateItem: (id: string, values: any) => Promise<void> }]
+type useGetItemFromCollectionType<S> = (params: { collection: collection, query: query, setData: (data: S) => void }) => [{
+    isLoading: boolean;
+    error: null | any;
+    hasFetched: boolean;
+    initialData: any
+}, { updateItem: (id: string, values: any) => Promise<void>, getCollectionData: () => Promise<void> }]
 /**
- *  Get's an item from a determiante collection
+*  Get's an item from a determiante collection
  */
-export const useGetItemFromCollection: useGetItemFromCollectionType = (collection, query) => {
+type useGetItemFromCollectionParams = { collection: collection, query: query, setData: any }
+type useGetItemFromCollectionReturn = [{
+    isLoading: boolean;
+    error: null | any;
+    hasFetched: boolean;
+    initialData: any
+}, { updateItem: (id: string, values: any) => Promise<void>, getCollectionData: () => Promise<void> }];
+
+export function useGetItemFromCollection({ collection, query, setData }: useGetItemFromCollectionParams): useGetItemFromCollectionReturn {
     const { key, operator, value } = useMemo(() => query, [query]);
     const collectionMemo = useMemo(() => collection, [collection]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [data, setData] = useState<any>(null);
+
+    const [status, setStatus] = useState({
+        isLoading: false,
+        error: null,
+        hasFetched: false,
+        initialData: null
+    })
 
     const getItemFromQuery = useCallback(async () => {
         const querySnapshot = await db.collection(collectionMemo).where(key, operator, value).get()
@@ -69,33 +84,53 @@ export const useGetItemFromCollection: useGetItemFromCollectionType = (collectio
     }, [collectionMemo, key, operator, value]);
 
     const getCollectionData = useCallback(async () => {
-        setIsLoading(true);
+        setStatus({
+            ...status,
+            isLoading: true
+        })
         try {
-            const data = await getItemFromQuery();
+            const data: any = await getItemFromQuery();
             setData(data);
-            setIsLoading(false);
+            setStatus({
+                ...status,
+                hasFetched: true,
+                isLoading: false,
+                initialData: data
+            })
         } catch (error) {
-            setError(error)
-            setIsLoading(false);
+            setStatus({
+                ...status,
+                error,
+                hasFetched: true,
+                isLoading: false
+            })
         }
-    }, [getItemFromQuery])
+    }, [getItemFromQuery, setData, status])
 
     const updateItem = useCallback(async (id: string, values: any) => {
-        setIsLoading(true);
+        setStatus({
+            ...status,
+            isLoading: true
+        })
         try {
             await db.collection(collectionMemo).doc(id).update(values);
             const data = await getItemFromQuery();
             setData(data);
-            setIsLoading(false);
+            setStatus({
+                ...status,
+                isLoading: false
+            })
 
         } catch (error) {
-            setError(error);
-            setIsLoading(false);
+            setStatus({
+                ...status,
+                error,
+                isLoading: false
+            })
         }
-    }, [collectionMemo, getItemFromQuery])
+    }, [collectionMemo, getItemFromQuery, setData, status])
 
-    useEffect(() => {
-        getCollectionData();
-    }, [getCollectionData])
-    return [data, isLoading, error, { updateItem }]
+
+    return [status, { updateItem, getCollectionData }]
+
 }

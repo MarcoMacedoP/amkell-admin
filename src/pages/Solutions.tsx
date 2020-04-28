@@ -13,7 +13,7 @@ export const Solutions: React.FC<SolutionsProps> = ({ children }) => {
       <p className="mt-4">
         Desde aquí se pueden editar las diferentes soluciones.
       </p>
-      <section className="mt-8">
+      <section className="mt-8 flex flex-wrap">
         {isLoading || !solutions ? (
           <p>Loading ...</p>
         ) : (
@@ -23,12 +23,13 @@ export const Solutions: React.FC<SolutionsProps> = ({ children }) => {
               slug: string | number | undefined;
               name: string;
             }) => (
-              <LinkCard
-                desc={solution.caption}
-                url={"/soluciones/" + solution.slug}
-                title={solution.name}
-                key={solution.slug}
-              />
+              <div key={solution.slug} className="m-2 flex">
+                <LinkCard
+                  desc={solution.caption}
+                  url={"/soluciones/" + solution.slug}
+                  title={solution.name}
+                />
+              </div>
             )
           )
         )}
