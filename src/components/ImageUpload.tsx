@@ -17,9 +17,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     onUpload(images);
   };
   const handleDelete = (index: number) => {
-    const newImages = images.splice(index, 2);
-
-    console.log(index, newImages);
+    const newImages = images.filter((img, i) => index !==  i);
     onDelete(newImages);
   };
   return (

@@ -6,6 +6,7 @@ import { Solution } from "./pages/Solution";
 import { Materials } from "./pages/Materials";
 import { AddMaterial } from "./pages/AddMaterial";
 import { Material } from "./pages/Material";
+import { Projects } from "./pages/Projects";
 type AppProps = {};
 
 export const App: React.FC<AppProps> = () => {
@@ -30,6 +31,9 @@ export const App: React.FC<AppProps> = () => {
           </Route>
           <Route exact path="/materiales/:slug">
             <Material />
+          </Route>
+          <Route exact path="/proyectos">
+            <Projects />
           </Route>
         </Switch>
       </Layout>
