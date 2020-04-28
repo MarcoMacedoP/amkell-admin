@@ -5,6 +5,7 @@ import { Solutions } from "./pages/Solutions";
 import { Solution } from "./pages/Solution";
 import { Materials } from "./pages/Materials";
 import { AddMaterial } from "./pages/AddMaterial";
+import { Material } from "./pages/Material";
 type AppProps = {};
 
 export const App: React.FC<AppProps> = () => {
@@ -26,6 +27,9 @@ export const App: React.FC<AppProps> = () => {
           </Route>
           <Route exact path="/materiales/agregar">
             <AddMaterial />
+          </Route>
+          <Route exact path="/materiales/:slug">
+            <Material />
           </Route>
         </Switch>
       </Layout>

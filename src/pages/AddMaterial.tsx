@@ -7,15 +7,10 @@ import { Editor } from "../components/Editor";
 import ImageUploader from "react-images-upload";
 import { useAddItemToCollection } from "../hooks/Firebase";
 import { Loader } from "../components/Loader";
+import { Material } from "../types/materials";
 
 type AddMaterialProps = {};
-interface Material {
-  name: string;
-  slug: string;
-  desc: string;
-  images: Array<string>;
-  caption: string;
-}
+
 const intialFormState: Material = {
   name: "",
   slug: "",
