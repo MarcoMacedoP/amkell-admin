@@ -4,7 +4,7 @@ type ImageUploadProps = {
   images: Array<string>;
   alt: string;
   onUpload: (images: Array<string>) => void;
-  onDelete: (updatedImages: Array<string>) => void;
+  onDelete?: (updatedImages: Array<string>) => void;
   singleImage?: boolean;
 };
 
@@ -12,17 +12,12 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   images,
   alt,
   onUpload,
-  onDelete,
   singleImage,
 }) => {
   const handleImageUpload = (files: File[], images: string[]) => {
     onUpload(images);
   };
-  const handleDelete = (index: number) => {
-    const newImages = images.filter((img, i) => index !== i);
-    console.log(newImages);
-    onDelete(newImages);
-  };
+
   return (
     <div>
       <div className="flex flex-wrap mt-8">
