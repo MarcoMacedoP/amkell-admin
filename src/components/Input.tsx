@@ -2,6 +2,7 @@ import React from "react";
 
 type InputProps = {
   label: string;
+  type?: "text" | "email" | "password";
   value: any;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   name: string;
@@ -10,6 +11,7 @@ type InputProps = {
 export const Input = ({
   label,
   name,
+  type = "text",
   placeholder,
   onChange,
   value,
@@ -18,6 +20,7 @@ export const Input = ({
     <label htmlFor={name}>{label}</label>
 
     <input
+      type={type}
       className="input"
       placeholder={placeholder}
       name={name}

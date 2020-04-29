@@ -1,6 +1,7 @@
 import * as React from "react";
 import { PageLabel } from "./PageLabel";
 import { Link } from "react-router-dom";
+import { hasUser } from "../../hooks/Firebase";
 
 type LayoutProps = {};
 
@@ -14,10 +15,13 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               Dashboard
             </Link>
           </header>
-          <PageLabel to="/materiales" text="Materiales" />
-          <PageLabel to="/soluciones" text="Soluciones" />
-          <PageLabel to="/proyectos" text="Proyectos" />
-          <PageLabel to="/nosotros" text="Nosotros" />
+
+          <>
+            <PageLabel to="/materiales" text="Materiales" />
+            <PageLabel to="/proyectos" text="Proyectos" />
+            <PageLabel to="/soluciones" text="Soluciones" />
+            <PageLabel to="/nosotros" text="Nosotros" />
+          </>
         </aside>
         <main className=" flex-1  p-8">{children}</main>
       </section>

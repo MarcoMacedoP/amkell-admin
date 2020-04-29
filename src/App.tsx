@@ -10,6 +10,9 @@ import { Projects } from "./pages/Projects";
 import { AddProject } from "./pages/AddProject";
 import { Project } from "./pages/Project";
 import { About } from "./pages/About";
+import { Login } from "./pages/Login";
+import { PrivateRoute } from "./components/PrivateRoute";
+import { OnlyNotAuthRoute } from "./components/OnlyNotAuthRoute";
 type AppProps = {};
 
 export const App: React.FC<AppProps> = () => {
@@ -17,36 +20,36 @@ export const App: React.FC<AppProps> = () => {
     <Router>
       <Layout>
         <Switch>
-          <Route exact path="/">
-            <IndexPage />
-          </Route>
-          <Route exact path="/soluciones">
+          <OnlyNotAuthRoute exact path="/">
+            <Login />
+          </OnlyNotAuthRoute>
+          <PrivateRoute exact path="/soluciones">
             <Solutions />
-          </Route>
-          <Route exact path="/soluciones/:slug">
+          </PrivateRoute>
+          <PrivateRoute exact path="/soluciones/:slug">
             <Solution />
-          </Route>
-          <Route exact path="/materiales">
+          </PrivateRoute>
+          <PrivateRoute exact path="/materiales">
             <Materials />
-          </Route>
-          <Route exact path="/materiales/agregar">
+          </PrivateRoute>
+          <PrivateRoute exact path="/materiales/agregar">
             <AddMaterial />
-          </Route>
-          <Route exact path="/materiales/:slug">
+          </PrivateRoute>
+          <PrivateRoute exact path="/materiales/:slug">
             <Material />
-          </Route>
-          <Route exact path="/proyectos">
+          </PrivateRoute>
+          <PrivateRoute exact path="/proyectos">
             <Projects />
-          </Route>
-          <Route exact path="/proyectos/agregar">
+          </PrivateRoute>
+          <PrivateRoute exact path="/proyectos/agregar">
             <AddProject />
-          </Route>
-          <Route exact path="/proyectos/:slug">
+          </PrivateRoute>
+          <PrivateRoute exact path="/proyectos/:slug">
             <Project />
-          </Route>
-          <Route exact path="/nosotros">
+          </PrivateRoute>
+          <PrivateRoute exact path="/nosotros">
             <About />
-          </Route>
+          </PrivateRoute>
         </Switch>
       </Layout>
     </Router>

@@ -160,3 +160,14 @@ export function useAddItemToCollection<D>(collection: collection, data: D): [() 
 
     return [addItem, status];
 }
+
+
+export async function authUserWithEmailAndPassword(email: string, password: string) {
+
+
+    const result = await firebase.auth(app).signInWithEmailAndPassword(email, password);
+    return result.user
+
+
+}
+export const hasUser = () => firebase.auth(app).currentUser;
