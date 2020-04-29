@@ -15,7 +15,7 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
-      className={`animation-init block rounded-md  transition-colors duration-200 ease-in ${
+      className={`animation-init block rounded-md  transition-colors duration-200 ease-in p-2 ${
         type
           ? type === "primary"
             ? "bg-blue-500 text-white hover:bg-blue-700 active:bg-blue-700 focus:bg-blue-200"

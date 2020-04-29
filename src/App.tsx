@@ -7,6 +7,8 @@ import { Materials } from "./pages/Materials";
 import { AddMaterial } from "./pages/AddMaterial";
 import { Material } from "./pages/Material";
 import { Projects } from "./pages/Projects";
+import { AddProject } from "./pages/AddProject";
+import { Project } from "./pages/Project";
 type AppProps = {};
 
 export const App: React.FC<AppProps> = () => {
@@ -34,6 +36,12 @@ export const App: React.FC<AppProps> = () => {
           </Route>
           <Route exact path="/proyectos">
             <Projects />
+          </Route>
+          <Route exact path="/proyectos/agregar">
+            <AddProject />
+          </Route>
+          <Route exact path="/proyectos/:slug">
+            <Project />
           </Route>
         </Switch>
       </Layout>

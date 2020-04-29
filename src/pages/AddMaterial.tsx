@@ -8,6 +8,7 @@ import ImageUploader from "react-images-upload";
 import { useAddItemToCollection } from "../hooks/Firebase";
 import { Loader } from "../components/Loader";
 import { Material } from "../types/materials";
+import { Input } from "../components/Input";
 
 type AddMaterialProps = {};
 
@@ -112,24 +113,3 @@ export const AddMaterial: React.FC<AddMaterialProps> = () => {
     </div>
   );
 };
-
-type InputProps = {
-  label: string;
-  value: any;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  name: string;
-  placeholder?: string;
-};
-const Input = ({ label, name, placeholder, onChange, value }: InputProps) => (
-  <div className="flex flex-col m2">
-    <label htmlFor={name}>{label}</label>
-    <input
-      className="input"
-      placeholder={placeholder}
-      name={name}
-      id={name}
-      onChange={onChange}
-      value={value}
-    />
-  </div>
-);
