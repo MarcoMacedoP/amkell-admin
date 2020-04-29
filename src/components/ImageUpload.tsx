@@ -5,6 +5,7 @@ type ImageUploadProps = {
   alt: string;
   onUpload: (images: Array<string>) => void;
   onDelete: (updatedImages: Array<string>) => void;
+  singleImage?: boolean;
 };
 
 export const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -12,6 +13,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   alt,
   onUpload,
   onDelete,
+  singleImage,
 }) => {
   const handleImageUpload = (files: File[], images: string[]) => {
     onUpload(images);
@@ -29,12 +31,6 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             (img, index) =>
               img && (
                 <div key={index} className="animation-init w-1/3 relative">
-                  <span
-                    onClick={() => handleDelete(index)}
-                    className="absolute top-0 text-sm text-white font-bold bg-red-500 rounded-md px-2 py-1 cursor-pointer transition-colors duration-300 hover:bg-red-700"
-                  >
-                    Eliminar
-                  </span>
                   <img
                     className="object-contain object-center"
                     src={img}
@@ -45,6 +41,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           )}
       </div>
       <ImageUploader
+        withPreview
+        singleImage={singleImage}
         name="images"
         buttonText="Agregar imagenes"
         imgExtension={[".jpg", ".gif", ".png", ".gif"]}

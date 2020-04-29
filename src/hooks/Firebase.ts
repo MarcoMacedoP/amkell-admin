@@ -16,14 +16,15 @@ const firebaseConfig = {
 };
 const app = firebase.initializeApp(firebaseConfig);
 const db = app.firestore();
-type collection = 'Soluciones' | 'Materiales' | 'Proyectos';
+
+type collection = 'Soluciones' | 'Materiales' | 'Proyectos' | 'Nosotros' | 'SolucionesPage';
 
 type query = {
     key: string;
     operator: firebase.firestore.WhereFilterOp;
     value: any;
 }
-export function useGetCollection(collection: collection) {
+export function useGetCollection<S>(collection: collection): [S, boolean, any] {
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -122,6 +123,7 @@ export function useGetItemFromCollection({ collection, query, setData }: useGetI
             })
 
         } catch (error) {
+            console.log(error)
             setStatus({
                 ...status,
                 error,

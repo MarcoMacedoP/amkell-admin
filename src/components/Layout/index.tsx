@@ -14,10 +14,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               Dashboard
             </Link>
           </header>
-          <PageLabel to="/paginas/" text="Paginas" />
           <PageLabel to="/materiales" text="Materiales" />
           <PageLabel to="/soluciones" text="Soluciones" />
           <PageLabel to="/proyectos" text="Proyectos" />
+          <PageLabel to="/nosotros" text="Nosotros" />
         </aside>
         <main className=" flex-1  p-8">{children}</main>
       </section>

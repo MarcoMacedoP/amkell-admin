@@ -9,6 +9,7 @@ import { Material } from "./pages/Material";
 import { Projects } from "./pages/Projects";
 import { AddProject } from "./pages/AddProject";
 import { Project } from "./pages/Project";
+import { About } from "./pages/About";
 type AppProps = {};
 
 export const App: React.FC<AppProps> = () => {
@@ -42,6 +43,9 @@ export const App: React.FC<AppProps> = () => {
           </Route>
           <Route exact path="/proyectos/:slug">
             <Project />
+          </Route>
+          <Route exact path="/nosotros">
+            <About />
           </Route>
         </Switch>
       </Layout>

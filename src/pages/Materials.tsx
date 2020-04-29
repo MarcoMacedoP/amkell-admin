@@ -4,11 +4,14 @@ import { Loader } from "../components/Loader";
 import { LinkCard } from "../components/LinkCard";
 import { Button } from "../components/Button";
 import { useHistory } from "react-router-dom";
+import { Material } from "../types/materials";
 
 type MaterialsProps = {};
 
 export const Materials: React.FC<MaterialsProps> = () => {
-  const [materials, isLoading] = useGetCollection("Materiales");
+  const [materials, isLoading] = useGetCollection<Array<Material>>(
+    "Materiales"
+  );
   const history = useHistory();
   const goToAddMaterials = () => history.push("/materiales/agregar");
   return isLoading || !materials ? (

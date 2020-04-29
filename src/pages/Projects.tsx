@@ -8,7 +8,7 @@ import { project } from "../types/projects";
 
 type ProjectsProps = {};
 export const Projects: React.FC<ProjectsProps> = () => {
-  const [projects, isLoading] = useGetCollection("Proyectos");
+  const [projects, isLoading] = useGetCollection<project[]>("Proyectos");
   const history = useHistory();
   const goToAddProject = () => history.push("/proyectos/agregar");
   return isLoading ? (
@@ -24,7 +24,7 @@ export const Projects: React.FC<ProjectsProps> = () => {
         className="p-2 mb-8"
       />
       <div className="flex">
-        {projects?.map((p: project) => (
+        {projects?.map((p) => (
           <div className="m-2" key={p.slug}>
             <LinkCard
               url={"/proyectos/" + p.slug}

@@ -5,7 +5,7 @@ import { LinkCard } from "../components/LinkCard";
 type SolutionsProps = {};
 
 export const Solutions: React.FC<SolutionsProps> = ({ children }) => {
-  const [solutions, isLoading] = useGetCollection("Soluciones");
+  const [solutions, isLoading] = useGetCollection<Solution[]>("Soluciones");
   console.log(solutions);
   return (
     <>
@@ -17,21 +17,15 @@ export const Solutions: React.FC<SolutionsProps> = ({ children }) => {
         {isLoading || !solutions ? (
           <p>Loading ...</p>
         ) : (
-          solutions.map(
-            (solution: {
-              caption: string;
-              slug: string | number | undefined;
-              name: string;
-            }) => (
-              <div key={solution.slug} className="m-2 flex">
-                <LinkCard
-                  desc={solution.caption}
-                  url={"/soluciones/" + solution.slug}
-                  title={solution.name}
-                />
-              </div>
-            )
-          )
+          solutions.map((solution) => (
+            <div key={solution.slug} className="m-2 flex">
+              <LinkCard
+                desc={solution.caption}
+                url={"/soluciones/" + solution.slug}
+                title={solution.name}
+              />
+            </div>
+          ))
         )}
       </section>
     </>
