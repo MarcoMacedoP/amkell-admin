@@ -13,6 +13,7 @@ import { About } from "./pages/About";
 import { Login } from "./pages/Login";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { OnlyNotAuthRoute } from "./components/OnlyNotAuthRoute";
+import { Gallery } from "./pages/Gallery";
 type AppProps = {};
 
 export const App: React.FC<AppProps> = () => {
@@ -50,12 +51,11 @@ export const App: React.FC<AppProps> = () => {
           <PrivateRoute exact path="/nosotros">
             <About />
           </PrivateRoute>
+          <PrivateRoute exact path="/galeria">
+            <Gallery />
+          </PrivateRoute>
         </Switch>
       </Layout>
     </Router>
   );
 };
-
-const IndexPage = () => (
-  <div className=" items-center justify-center">Hello there</div>
-);

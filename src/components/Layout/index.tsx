@@ -21,6 +21,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             <PageLabel to="/proyectos" text="Proyectos" />
             <PageLabel to="/soluciones" text="Soluciones" />
             <PageLabel to="/nosotros" text="Nosotros" />
+            <PageLabel to="/galeria" text="Galeria" />
           </>
         </aside>
         <main className=" flex-1  p-8">{children}</main>

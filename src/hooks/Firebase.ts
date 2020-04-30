@@ -17,7 +17,7 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const db = app.firestore();
 
-type collection = 'Soluciones' | 'Materiales' | 'Proyectos' | 'Nosotros' | 'SolucionesPage';
+type collection = 'Soluciones' | 'Materiales' | 'Proyectos' | 'Nosotros' | 'SolucionesPage' | 'Galeria';
 
 type query = {
     key: string;

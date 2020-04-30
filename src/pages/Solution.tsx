@@ -7,6 +7,7 @@ import { Button } from "../components/Button";
 import { Editor } from "../components/Editor";
 import { SlugEditor } from "../components/SlugEditor";
 import { useForm } from "../hooks/Forms";
+import { ImageUpload } from "../components/ImageUpload";
 
 type SolutionProps = {};
 
@@ -16,9 +17,11 @@ type Solution = {
   slug: string;
   content: string;
   caption: string;
+  miniature: string;
 };
 const initalValues = {
   name: "",
+  miniature: "",
   slug: "",
   caption: "",
   content: "",
@@ -56,6 +59,8 @@ export const Solution: React.FC<SolutionProps> = () => {
   };
 
   const handleCancel = () => setValues(initialData);
+  const setMiniature = (images: string[]) =>
+    setValues({ ...values, miniature: images[0] });
 
   return isLoading ? (
     <p>Loading...</p>
@@ -74,7 +79,15 @@ export const Solution: React.FC<SolutionProps> = () => {
           onChange={handleChange}
           value={values.caption}
         />
-
+        <div>
+          <p>Miniatura</p>
+          <ImageUpload
+            alt={values.name}
+            onUpload={setMiniature}
+            singleImage
+            images={[values.miniature]}
+          />
+        </div>
         <div className="">
           <Editor value={values.content} onChange={setContent} />
         </div>

@@ -71,16 +71,11 @@ export const Material: React.FC<MaterialProps> = () => {
           />
 
           <div className="">
-            <Editor
-              value={values.desc}
-              onChange={setDesc}
-              canAddImage={false}
-            />
+            <Editor value={values.desc} onChange={setDesc} />
           </div>
           <ImageUpload
             images={values.images}
             onUpload={setImages}
-            onDelete={setImages}
             alt={values.name}
           />
           <SlugEditor
