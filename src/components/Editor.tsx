@@ -55,15 +55,9 @@ type EditorProps = {
   onChange: (data: any) => void;
   canAddImage?: boolean;
 };
-export const Editor = ({
-  onChange,
-  value,
-  canAddImage = true,
-}: EditorProps) => (
+export const Editor = ({ onChange, value }: EditorProps) => (
   <Ckeditor
-    config={
-      canAddImage ? editorConfigurationWithImage : editorConfigurationBase
-    }
+    config={editorConfigurationBase}
     editor={ClassicEditor}
     onChange={(event: any, editor: any) => onChange(editor.getData())}
     data={value}
