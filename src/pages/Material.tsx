@@ -3,7 +3,10 @@ import * as React from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useForm } from "../hooks/Forms";
 import { Material as MaterialInterface } from "../types/materials";
-import { useGetItemFromCollection } from "../hooks/Firebase";
+import {
+  useGetItemFromCollection,
+  uploadPicture,
+} from "../hooks/Firebase";
 import { Loader } from "../components/Loader";
 import { Editor } from "../components/Editor";
 import { SlugEditor } from "../components/SlugEditor";
@@ -38,11 +41,23 @@ export const Material: React.FC<MaterialProps> = () => {
   }, []);
 
   const setDesc = (desc: string) => setValues({ ...values, desc });
-  const setImages = (images: Array<string>) => setValues({ ...values, images });
+  const setImages = (images: Array<string>) =>
+    setValues({ ...values, images });
 
   const handleSubmit = async () => {
-    await collection.updateItem(values.id, values);
-    history.goBack();
+    try {
+      const images = await Promise.all(
+        values.images.map((img, index) =>
+          uploadPicture(img, `${values.slug}-${index}`)
+        )
+      );
+      console.log(images);
+      await collection.updateItem(values.id, { ...values, images });
+      alert("Cambios realizados");
+      history.goBack();
+    } catch (error) {
+      alert(error);
+    }
   };
   const handleCancel = () => {
     setValues(status.initialData);
@@ -90,7 +105,11 @@ export const Material: React.FC<MaterialProps> = () => {
               text="Guardar cambios"
               type="primary"
             />
-            <Button onClick={handleCancel} className="w-1/2" text="Cancelar" />
+            <Button
+              onClick={handleCancel}
+              className="w-1/2"
+              text="Cancelar"
+            />
           </div>
         </div>
       </div>
