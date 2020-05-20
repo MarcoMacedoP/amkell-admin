@@ -17,7 +17,7 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const db = app.firestore();
 
-type collection = 'Soluciones' | 'Materiales' | 'Proyectos' | 'Nosotros' | 'SolucionesPage' | 'Galeria';
+type collection = 'Soluciones' | 'Materiales' | 'Proyectos' | 'Nosotros' | 'SolucionesPage' | 'Galeria' | 'Carosuel';
 
 type query = {
     key: string;
@@ -35,7 +35,7 @@ export function useGetCollection<S>(collection: collection): [S, boolean, any] {
             setIsLoading(true);
             try {
                 const querySnapshot = await db.collection(collection).get();
-                const data = querySnapshot.docs.map(e => e.data());
+                const data = querySnapshot.docs.map(e => ({ ...e.data(), id: e.id, }));
                 setData(data);
                 setIsLoading(false);
             } catch (error) {
@@ -137,6 +137,37 @@ export function useGetItemFromCollection({ collection, query, setData }: useGetI
 
 }
 
+export const useGetDocument = <S>(id: string, collection: collection) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<any>();
+    const [data, setData] = useState<S>();
+
+    useEffect(() => {
+        async function fetchDocument() {
+            setIsLoading(true);
+            try {
+                const result = await db.collection(collection).doc(id).get();
+                setData({
+                    ...result.data() as S,
+                })
+                setIsLoading(false);
+            } catch (error) {
+                setError(error);
+            }
+        }
+        fetchDocument();
+    }, [collection, id])
+    async function updateDocument(values: S) {
+        setIsLoading(true);
+        try {
+            await db.collection(collection).doc(id).update(values);
+            setIsLoading(false);
+        } catch (error) {
+            setError(error)
+        }
+    }
+    return [{ isLoading, error, setIsLoading }, { data, setData, updateDocument }]
+}
 
 
 export function useAddItemToCollection<D>(collection: collection, data: D): [() => Promise<any>, { isLoading: boolean, error: any }] {

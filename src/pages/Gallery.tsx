@@ -1,6 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
-import { useGetCollection, useGetItemFromCollection } from "../hooks/Firebase";
+import {
+  useGetCollection,
+  useGetItemFromCollection,
+} from "../hooks/Firebase";
 import { Loader } from "../components/Loader";
 import { ImageUpload } from "../components/ImageUpload";
 import { Button } from "../components/Button";
@@ -45,7 +48,7 @@ export const Gallery: React.FC<GalleryProps> = () => {
       <ImageUpload
         images={gallery?.images || []}
         onUpload={handleUpload}
-        alt="amkell"
+        alt="amkel"
       />
       <Button onClick={handleSubmit} text="Guardar cambios" />
     </div>

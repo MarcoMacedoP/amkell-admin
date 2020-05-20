@@ -87,7 +87,7 @@ export const Solutions: React.FC<SolutionsProps> = ({ children }) => {
         <ImageUpload
           images={[solutionsInfo.image]}
           singleImage
-          alt="Amkell"
+          alt="Amkel"
           onUpload={([image]) =>
             setSolutionsInfo({ ...solutionsInfo, image })
           }

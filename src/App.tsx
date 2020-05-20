@@ -1,6 +1,10 @@
 import * as React from "react";
 import { Layout } from "./components/Layout";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 import { Solutions } from "./pages/Solutions";
 import { Solution } from "./pages/Solution";
 import { Materials } from "./pages/Materials";
@@ -14,6 +18,8 @@ import { Login } from "./pages/Login";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { OnlyNotAuthRoute } from "./components/OnlyNotAuthRoute";
 import { Gallery } from "./pages/Gallery";
+import { Carousel } from "./pages/Carousel";
+import { CarouselItem } from "./pages/CarouselItem";
 type AppProps = {};
 
 export const App: React.FC<AppProps> = () => {
@@ -53,6 +59,12 @@ export const App: React.FC<AppProps> = () => {
           </PrivateRoute>
           <PrivateRoute exact path="/galeria">
             <Gallery />
+          </PrivateRoute>
+          <PrivateRoute exact path="/carousel">
+            <Carousel />
+          </PrivateRoute>
+          <PrivateRoute exact path="/carousel/:id">
+            <CarouselItem />
           </PrivateRoute>
         </Switch>
       </Layout>
