@@ -63,16 +63,21 @@ export const Solution: React.FC<SolutionProps> = () => {
     //   const parsedImage = img.replace("src=", "").replace('"', "");
     //   return parsedImage;
     // });
-    const images = Array.from(values.content.matchAll(/src=".*"/g));
-    debugger;
-    console.log(values);
-    const miniaturePromise = uploadPicture(
-      values.miniature,
-      values.name
-    );
-    const [miniature] = await Promise.all([miniaturePromise]);
-    const updatedValues = { ...values, miniature };
-    updateItem(values.id, updatedValues);
+    //const images = Array.from(values.content.matchAll(/src=".*"/g));
+    //debugger;
+    //console.log(values);
+    try {
+      const miniaturePromise = uploadPicture(
+        values.miniature,
+        values.name
+      );
+      const [miniature] = await Promise.all([miniaturePromise]);
+      const updatedValues = { ...values, miniature };
+      await updateItem(values.id, updatedValues);
+      alert("Cambios guardados");
+    } catch (error) {
+      alert(error);
+    }
   };
 
   const handleCancel = () => setValues(initialData);

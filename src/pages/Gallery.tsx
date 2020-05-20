@@ -3,6 +3,7 @@ import * as React from "react";
 import {
   useGetCollection,
   useGetItemFromCollection,
+  uploadPicture,
 } from "../hooks/Firebase";
 import { Loader } from "../components/Loader";
 import { ImageUpload } from "../components/ImageUpload";
@@ -34,9 +35,18 @@ export const Gallery: React.FC<GalleryProps> = () => {
     if (gallery) setGallery({ ...gallery, images });
   }
   async function handleSubmit() {
-    if (gallery) {
-      await collection.updateItem(gallery.id, gallery);
-      alert("Images guardadas.");
+    try {
+      if (gallery) {
+        const images = await Promise.all(
+          gallery.images.map((img, index) =>
+            uploadPicture(img, `gallery-${index}`)
+          )
+        );
+        await collection.updateItem(gallery.id, { images });
+        alert("Images guardadas.");
+      }
+    } catch (error) {
+      alert(error);
     }
   }
 

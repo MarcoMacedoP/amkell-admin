@@ -11,7 +11,6 @@ import { Loader } from "../components/Loader";
 import { Input } from "../components/Input";
 import { ImageUpload } from "../components/ImageUpload";
 import { Button } from "../components/Button";
-import { useHistory } from "react-router-dom";
 
 type SolutionsProps = {};
 interface SolutionsInfo {
@@ -49,16 +48,19 @@ export const Solutions: React.FC<SolutionsProps> = ({ children }) => {
   }, []);
 
   async function handleSubmit() {
-    console.log("handleSubmit()");
-    const imageUrl = await uploadPicture(
-      solutionsInfo.image,
-      "soluciones"
-    );
-    await solutionsPageCollection.updateItem(solutionsInfo.id, {
-      ...solutionsInfo,
-      image: imageUrl,
-    });
-    alert("Informacion de soluciones actualizada");
+    try {
+      const imageUrl = await uploadPicture(
+        solutionsInfo.image,
+        "soluciones"
+      );
+      await solutionsPageCollection.updateItem(solutionsInfo.id, {
+        ...solutionsInfo,
+        image: imageUrl,
+      });
+      alert("Informacion de soluciones actualizada");
+    } catch (error) {
+      alert(error);
+    }
   }
   function handleCancel() {
     setSolutionsInfo(solutionsInfoStatus.initialData);

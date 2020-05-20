@@ -25,7 +25,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           images.map(
             (img, index) =>
               img && (
-                <div key={index} className="animation-init w-1/3 relative">
+                <div
+                  key={index}
+                  className="animation-init w-1/3 relative"
+                >
                   <img
                     className="object-contain object-center"
                     src={img}
@@ -40,9 +43,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         singleImage={singleImage}
         name="images"
         buttonText="Agregar imagenes"
-        imgExtension={[".jpg", ".gif", ".png", ".gif"]}
+        imgExtension={[".jpg", ".png"]}
         buttonClassName="bg-blue-500"
-        maxFileSize={5242880}
+        maxFileSize={1048487}
         onChange={handleImageUpload}
       />
     </div>

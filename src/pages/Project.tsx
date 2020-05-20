@@ -3,7 +3,10 @@ import { useParams, useHistory } from "react-router-dom";
 import { SlugEditor } from "../components/SlugEditor";
 import { project } from "../types/projects";
 import { useForm } from "../hooks/Forms";
-import { useGetItemFromCollection } from "../hooks/Firebase";
+import {
+  useGetItemFromCollection,
+  uploadPicture,
+} from "../hooks/Firebase";
 import { ImageUpload } from "../components/ImageUpload";
 import { Button } from "../components/Button";
 
@@ -11,6 +14,7 @@ type ProjectProps = {};
 
 export const Project: React.FC<ProjectProps> = () => {
   const { slug } = useParams();
+  const [isLoadingImage, setIsLoadingImage] = React.useState(false);
   const [values, handleChange, setValues] = useForm<project>({
     desc: "",
     id: "",
@@ -35,9 +39,21 @@ export const Project: React.FC<ProjectProps> = () => {
   const setImage = (images: string[]) =>
     setValues({ ...values, image: images[0] });
 
-  const handleSubmit = () => {
-    collection.updateItem(values.id, values);
-    goBack();
+  const handleSubmit = async () => {
+    setIsLoadingImage(true);
+    try {
+      const image = await uploadPicture(
+        values.image,
+        `project-${slug}`
+      );
+      await collection.updateItem(values.id, { ...values, image });
+      setIsLoadingImage(false);
+      alert("Cambios guardados");
+      goBack();
+    } catch (error) {
+      setIsLoadingImage(false);
+      alert(error);
+    }
   };
 
   const handleCancel = () => {
@@ -45,7 +61,7 @@ export const Project: React.FC<ProjectProps> = () => {
     goBack();
   };
 
-  return status.isLoading ? (
+  return status.isLoading || isLoadingImage ? (
     <p>Loading...</p>
   ) : !status.error ? (
     <>
@@ -67,6 +83,7 @@ export const Project: React.FC<ProjectProps> = () => {
           images={[values.image]}
           onDelete={setImage}
           onUpload={setImage}
+          singleImage
           alt={values.name}
         />
 
@@ -82,7 +99,11 @@ export const Project: React.FC<ProjectProps> = () => {
             text="Guardar cambios"
             type="primary"
           />
-          <Button onClick={handleCancel} className="w-1/2" text="Cancelar" />
+          <Button
+            onClick={handleCancel}
+            className="w-1/2"
+            text="Cancelar"
+          />
         </div>
       </div>
     </>

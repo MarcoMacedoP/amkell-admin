@@ -170,15 +170,15 @@ export const useGetDocument = <S>(id: string, collection: collection) => {
 }
 
 
-export function useAddItemToCollection<D>(collection: collection, data: D): [() => Promise<any>, { isLoading: boolean, error: any }] {
+export function useAddItemToCollection<D>(collection: collection, data: D): [(updatedData?: D) => Promise<any>, { isLoading: boolean, error: any }] {
     const [status, setStatus] = useState({
         isLoading: false,
         error: null,
     })
-    const addItem = useCallback(async () => {
+    const addItem = useCallback(async (updatedData?: D) => {
         setStatus({ ...status, isLoading: true })
         try {
-            const result = await db.collection(collection).add(data);
+            const result = await db.collection(collection).add({ ...data, ...updatedData });
             setStatus({ ...status, isLoading: false });
             return result;
 

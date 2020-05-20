@@ -5,7 +5,10 @@ import { Button } from "../components/Button";
 import { useHistory } from "react-router-dom";
 import { Editor } from "../components/Editor";
 import ImageUploader from "react-images-upload";
-import { useAddItemToCollection } from "../hooks/Firebase";
+import {
+  useAddItemToCollection,
+  uploadPicture,
+} from "../hooks/Firebase";
 import { Loader } from "../components/Loader";
 import { Material } from "../types/materials";
 import { Input } from "../components/Input";
@@ -22,17 +25,31 @@ const intialFormState: Material = {
 export const AddMaterial: React.FC<AddMaterialProps> = () => {
   const [values, handleChange, setValues] = useForm(intialFormState);
   const history = useHistory();
-  const [addItem, { isLoading }] = useAddItemToCollection("Materiales", values);
+  const [addItem, { isLoading }] = useAddItemToCollection(
+    "Materiales",
+    values
+  );
+  const [isLoadingImages, setIsLoadingImages] = React.useState(false);
   async function handleSubmit() {
     const { name, desc, slug, images } = values;
     if (!name || !desc || !slug || images.length === 0) {
       alert("Por favor, rellena todos los campos.");
     } else {
       try {
-        await addItem();
+        setIsLoadingImages(true);
+        const images = await Promise.all(
+          values.images.map((img, index) =>
+            uploadPicture(img, `${slug}-${index}`)
+          )
+        );
+        await addItem({ ...values, images });
+        setIsLoadingImages(false);
+        alert("Documento guardado");
         history.goBack();
       } catch (e) {
+        setIsLoadingImages(false);
         console.error(e);
+        alert(e);
       }
     }
   }
@@ -46,7 +63,7 @@ export const AddMaterial: React.FC<AddMaterialProps> = () => {
   function handleImageUpload(files: File[], images: string[]) {
     setValues({ ...values, images });
   }
-  return isLoading ? (
+  return isLoading || isLoadingImages ? (
     <Loader />
   ) : (
     <div className="mb-16">
@@ -67,13 +84,17 @@ export const AddMaterial: React.FC<AddMaterialProps> = () => {
         />
         <div>
           <p className="mb-2">Descripcion del material.</p>
-          <Editor canAddImage={false} value={values.desc} onChange={setDesc} />
+          <Editor
+            canAddImage={false}
+            value={values.desc}
+            onChange={setDesc}
+          />
         </div>
         <div className="my-2">
           <p>Galeria de imagenes</p>
           <p className="text-gray-400 text-sm mb-4">
-            La primera imagen sera usada como imagen principal y las se demas se
-            mostraran en la galería.{" "}
+            La primera imagen sera usada como imagen principal y las
+            se demas se mostraran en la galería.{" "}
           </p>
           <div className="flex flex-wrap">
             {values.images.length > 0 &&
@@ -89,7 +110,7 @@ export const AddMaterial: React.FC<AddMaterialProps> = () => {
           <ImageUploader
             name="images"
             buttonText="Agregar imagenes"
-            imgExtension={[".jpg", ".gif", ".png", ".gif"]}
+            imgExtension={[".jpg", ".png"]}
             buttonClassName="bg-blue-500"
             maxFileSize={1048487}
             onChange={handleImageUpload}

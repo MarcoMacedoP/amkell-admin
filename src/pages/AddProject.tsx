@@ -1,7 +1,10 @@
 import * as React from "react";
 import { project } from "../types/projects";
 import { useForm } from "../hooks/Forms";
-import { useAddItemToCollection } from "../hooks/Firebase";
+import {
+  useAddItemToCollection,
+  uploadPicture,
+} from "../hooks/Firebase";
 import { useHistory } from "react-router-dom";
 import { Input } from "../components/Input";
 import { ImageUpload } from "../components/ImageUpload";
@@ -20,6 +23,7 @@ const initialFormState: project = {
 
 export const AddProject: React.FC<AddProjectProps> = () => {
   const [values, handleChange, setValues] = useForm(initialFormState);
+  const [isLoadingImages, setIsLoadingImages] = React.useState(false);
   const [addItem, { isLoading }] = useAddItemToCollection<project>(
     "Proyectos",
     values
@@ -31,8 +35,20 @@ export const AddProject: React.FC<AddProjectProps> = () => {
     if (!desc || !image || !name) {
       alert("Por favor rellene todos los campos");
     } else {
-      await addItem();
-      goBack();
+      setIsLoadingImages(true);
+      try {
+        const imageUrl = await uploadPicture(
+          image,
+          `project-${encodeURI(name)}`
+        );
+        await addItem({ ...values, image: imageUrl });
+        setIsLoadingImages(false);
+        alert("Proyecto agregado");
+        goBack();
+      } catch (error) {
+        setIsLoadingImages(false);
+        alert(error);
+      }
     }
   }
   function setDesc(desc: string) {
@@ -42,7 +58,7 @@ export const AddProject: React.FC<AddProjectProps> = () => {
     setValues({ ...values, image: images[0] });
   }
 
-  return isLoading ? (
+  return isLoadingImages || isLoading ? (
     <Loader />
   ) : (
     <div>
@@ -66,6 +82,7 @@ export const AddProject: React.FC<AddProjectProps> = () => {
         <ImageUpload
           onDelete={setImage}
           onUpload={setImage}
+          singleImage
           images={[values.image]}
           alt={values.name}
         />

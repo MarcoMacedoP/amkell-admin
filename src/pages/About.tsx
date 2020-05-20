@@ -1,6 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
-import { useGetItemFromCollection } from "../hooks/Firebase";
+import {
+  useGetItemFromCollection,
+  uploadPicture,
+} from "../hooks/Firebase";
 import { Loader } from "../components/Loader";
 import { useForm } from "../hooks/Forms";
 import { Input } from "../components/Input";
@@ -22,8 +25,11 @@ const intialFormState: About = {
 };
 
 export const About: React.FC<AboutProps> = () => {
-  const [data, handleChange, setData] = useForm<About>(intialFormState);
+  const [data, handleChange, setData] = useForm<About>(
+    intialFormState
+  );
   const { goBack } = useHistory();
+  const [isLoading, setIsLoading] = React.useState(false);
   const [status, collection] = useGetItemFromCollection({
     collection: "Nosotros",
     query: {
@@ -39,12 +45,39 @@ export const About: React.FC<AboutProps> = () => {
   const setLogos = (logos: string[]) => setData({ ...data, logos });
   async function handleSubmit() {
     const { alliances, clients, continents, desc, materials } = data;
-    if (!alliances || !clients || !continents || !desc || !materials) {
+    if (
+      !alliances ||
+      !clients ||
+      !continents ||
+      !desc ||
+      !materials
+    ) {
       alert("Favor de llenar todos los campos.");
     } else {
-      console.log("lol");
-
-      await collection.updateItem(data.id, data);
+      setIsLoading(true);
+      try {
+        const logosPromise = Promise.all(
+          data.logos.map((img, index) =>
+            uploadPicture(img, `about-logo-${index}`)
+          )
+        );
+        const [logos, team_photo, years_photo] = await Promise.all([
+          logosPromise,
+          uploadPicture(data.team_photo, `about-team`),
+          uploadPicture(data.years_photo, "about-years"),
+        ]);
+        await collection.updateItem(data.id, {
+          ...data,
+          logos,
+          team_photo,
+          years_photo,
+        });
+        setIsLoading(false);
+        alert("Cambios guardados");
+      } catch (error) {
+        setIsLoading(false);
+        alert("Error" + error);
+      }
     }
   }
   function handleCancel() {
@@ -58,7 +91,7 @@ export const About: React.FC<AboutProps> = () => {
   const setYearsPhoto = (images: string[]) =>
     setData({ ...data, years_photo: images[images.length - 1] });
 
-  return status.isLoading ? (
+  return status.isLoading || isLoading ? (
     <Loader />
   ) : (
     data && (
