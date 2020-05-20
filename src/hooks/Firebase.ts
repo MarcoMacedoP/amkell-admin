@@ -163,11 +163,23 @@ export function useAddItemToCollection<D>(collection: collection, data: D): [() 
 
 
 export async function authUserWithEmailAndPassword(email: string, password: string) {
-
-
     const result = await firebase.auth(app).signInWithEmailAndPassword(email, password);
     return result.user
-
-
 }
 export const hasUser = () => firebase.auth(app).currentUser;
+
+
+export async function uploadPicture(base64: string, name: string): Promise<string> {
+    const [fileType] = base64.split(';')
+    const fileExtension = fileType.replace('data:image/', '');
+    const ref = firebase.storage().ref(`${name}.${fileExtension}`);
+    try {
+        await ref.putString(base64, 'data_url', { contentDisposition: '' });
+        const url = await ref.getDownloadURL()
+        return url
+    } catch (error) {
+        const parsedError = String(error);
+        alert(parsedError);
+        return parsedError;
+    }
+}

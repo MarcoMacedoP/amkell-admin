@@ -1,6 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
-import { useGetCollection, useGetItemFromCollection } from "../hooks/Firebase";
+import {
+  useGetCollection,
+  useGetItemFromCollection,
+  uploadPicture,
+} from "../hooks/Firebase";
 import { LinkCard } from "../components/LinkCard";
 import { useForm } from "../hooks/Forms";
 import { Loader } from "../components/Loader";
@@ -17,7 +21,9 @@ interface SolutionsInfo {
   id: string;
 }
 export const Solutions: React.FC<SolutionsProps> = ({ children }) => {
-  const [solutions, isLoading] = useGetCollection<Solution[]>("Soluciones");
+  const [solutions, isLoading] = useGetCollection<Solution[]>(
+    "Soluciones"
+  );
   const [solutionsInfo, handleChange, setSolutionsInfo] = useForm<
     SolutionsInfo
   >({
@@ -43,7 +49,15 @@ export const Solutions: React.FC<SolutionsProps> = ({ children }) => {
   }, []);
 
   async function handleSubmit() {
-    await solutionsPageCollection.updateItem(solutionsInfo.id, solutionsInfo);
+    console.log("handleSubmit()");
+    const imageUrl = await uploadPicture(
+      solutionsInfo.image,
+      "soluciones"
+    );
+    await solutionsPageCollection.updateItem(solutionsInfo.id, {
+      ...solutionsInfo,
+      image: imageUrl,
+    });
     alert("Informacion de soluciones actualizada");
   }
   function handleCancel() {
@@ -74,7 +88,9 @@ export const Solutions: React.FC<SolutionsProps> = ({ children }) => {
           images={[solutionsInfo.image]}
           singleImage
           alt="Amkell"
-          onUpload={([image]) => setSolutionsInfo({ ...solutionsInfo, image })}
+          onUpload={([image]) =>
+            setSolutionsInfo({ ...solutionsInfo, image })
+          }
         />
         <div className="flex w-full">
           <Button

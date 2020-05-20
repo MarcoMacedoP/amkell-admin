@@ -28,8 +28,12 @@ export const AddMaterial: React.FC<AddMaterialProps> = () => {
     if (!name || !desc || !slug || images.length === 0) {
       alert("Por favor, rellena todos los campos.");
     } else {
-      await addItem();
-      history.goBack();
+      try {
+        await addItem();
+        history.goBack();
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
 
@@ -87,7 +91,7 @@ export const AddMaterial: React.FC<AddMaterialProps> = () => {
             buttonText="Agregar imagenes"
             imgExtension={[".jpg", ".gif", ".png", ".gif"]}
             buttonClassName="bg-blue-500"
-            maxFileSize={5242880}
+            maxFileSize={1048487}
             onChange={handleImageUpload}
           />
         </div>

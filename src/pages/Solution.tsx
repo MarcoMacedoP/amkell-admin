@@ -1,6 +1,9 @@
 import * as React from "react";
 import { useParams } from "react-router-dom";
-import { useGetItemFromCollection } from "../hooks/Firebase";
+import {
+  useGetItemFromCollection,
+  uploadPicture,
+} from "../hooks/Firebase";
 import { useEffect } from "react";
 
 import { Button } from "../components/Button";
@@ -29,7 +32,9 @@ const initalValues = {
 };
 export const Solution: React.FC<SolutionProps> = () => {
   const { slug } = useParams();
-  const [values, handleChange, setValues] = useForm<Solution>(initalValues);
+  const [values, handleChange, setValues] = useForm<Solution>(
+    initalValues
+  );
   const [
     { isLoading, initialData, error },
     { updateItem, getCollectionData },
@@ -53,9 +58,21 @@ export const Solution: React.FC<SolutionProps> = () => {
       content,
     });
   };
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    // const images = values.content.match(/src=".*"/gi)?.map((img) => {
+    //   const parsedImage = img.replace("src=", "").replace('"', "");
+    //   return parsedImage;
+    // });
+    const images = Array.from(values.content.matchAll(/src=".*"/g));
+    debugger;
     console.log(values);
-    updateItem(values.id, values);
+    const miniaturePromise = uploadPicture(
+      values.miniature,
+      values.name
+    );
+    const [miniature] = await Promise.all([miniaturePromise]);
+    const updatedValues = { ...values, miniature };
+    updateItem(values.id, updatedValues);
   };
 
   const handleCancel = () => setValues(initialData);
@@ -103,7 +120,11 @@ export const Solution: React.FC<SolutionProps> = () => {
             text="Guardar cambios"
             type="primary"
           />
-          <Button onClick={handleCancel} className="w-1/2" text="Cancelar" />
+          <Button
+            onClick={handleCancel}
+            className="w-1/2"
+            text="Cancelar"
+          />
         </div>
       </div>
     </>
