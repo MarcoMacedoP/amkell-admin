@@ -201,6 +201,13 @@ export const hasUser = () => firebase.auth(app).currentUser;
 
 
 export async function uploadPicture(base64: string, name: string): Promise<string> {
+    if (base64 === "[object Object]") {
+        return base64;
+    }
+    const isUrl = base64.match(/http/)
+    if (isUrl && isUrl?.length > 0) {
+        return base64;
+    }
     const [fileType] = base64.split(';')
     const fileExtension = fileType.replace('data:image/', '');
     const ref = firebase.storage().ref(`${name}.${fileExtension}`);

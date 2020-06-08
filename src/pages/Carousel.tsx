@@ -15,14 +15,16 @@ export const Carousel: React.FC<CarouselProps> = () => {
       <div>
         <h1 className="mb-2">Carrousel</h1>
         <p className="mb-4">Elementos del carrosel.</p>
-        <div className="flex">
+        <div className="flex flex-wrap w-full">
           {data.map((item) => (
-            <LinkCard
-              title={item.title}
-              key={item.url}
-              desc={item.buttonLabel}
-              url={`/carousel/${item.id}`}
-            />
+            <div className="m-2">
+              <LinkCard
+                title={item.title}
+                key={item.url}
+                desc={item.buttonLabel}
+                url={`/carousel/${item.id}`}
+              />
+            </div>
           ))}
         </div>
       </div>
